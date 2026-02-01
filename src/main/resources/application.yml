@@ -1,0 +1,44 @@
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    default-fetch-size: 100
+  # 매퍼 XML 위치 지정 (보통 아래 경로 많이 사용)
+  mapper-locations: classpath:mapper/*.xml
+  # DTO 패키지 별칭 지정 (XML에서 패키지명 생략 가능)
+  type-aliases-package: com.example.LunchGo.dto
+
+trend:
+  newbie-weight: ${TREND_NEWBIE_WEIGHT:50}
+  confirm-weight: ${TREND_CONFIRM_WEIGHT:0.8}
+  # 레거시 키 호환: confirm-weight 미설정 시 visit-weight 값을 사용합니다.
+  # 사용 순서: TREND_CONFIRM_WEIGHT -> TREND_VISIT_WEIGHT -> 기본값(0.8)
+  visit-weight: ${TREND_VISIT_WEIGHT:0.8}
+  view-weight: ${TREND_VIEW_WEIGHT:0.2}
+  default-image-url: ${TREND_DEFAULT_IMAGE_URL:/placeholder.svg}
+
+portone:
+  http:
+    connect-timeout-ms: ${PORTONE_HTTP_CONNECT_TIMEOUT_MS:5000}
+    read-timeout-ms: ${PORTONE_HTTP_READ_TIMEOUT_MS:12000}
+    max-attempts: ${PORTONE_HTTP_MAX_ATTEMPTS:2}
+    retry-backoff-ms: ${PORTONE_HTTP_RETRY_BACKOFF_MS:300}
+
+reservation:
+  payment-expiry:
+    interval-ms: ${RESERVATION_PAYMENT_EXPIRY_INTERVAL_MS:10000}
+
+kakao:
+  rest-api-key: ${KAKAO_REST_API_KEY:}
+
+login:
+  queue:
+    enabled: ${LOGIN_QUEUE_ENABLED:true}
+    capacity: ${LOGIN_QUEUE_CAPACITY:20}
+    token-ttl-ms: ${LOGIN_QUEUE_TOKEN_TTL_MS:120000}
+
+logging:
+  level:
+    org.hibernate.SQL: off

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LunchGo 방문 확인</title>
+    <style>
+        body { margin:0; font-family: system-ui, -apple-system, "Apple SD Gothic Neo","Malgun Gothic", Arial, sans-serif; background:#f8f9fa; }
+        .wrap { max-width:520px; margin:0 auto; padding:24px; }
+        .card { background:#fff; border:1px solid #e9ecef; border-radius:12px; padding:22px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+        .brand { font-weight:800; color:#ff6b4a; font-size:22px; margin:0 0 10px; }
+        .title { font-weight:800; color:#1e2a3b; font-size:18px; margin:0 0 10px; }
+        .desc { color:#495057; line-height:1.5; margin:0 0 16px; }
+        .btns { display:flex; gap:10px; flex-wrap:wrap; }
+        a.btn { flex:1; min-width:180px; text-align:center; padding:12px 14px; border-radius:10px; text-decoration:none; font-weight:700; }
+        a.primary { background:#ff6b4a; color:#fff; }
+        a.ghost { background:#fff; color:#343a40; border:1px solid #dee2e6; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <div class="brand">LunchGo</div>
+        <h1 class="title">방문 확인</h1>
+        <p class="desc" id="desc">아래 버튼을 눌러 방문 여부를 확정해주세요.</p>
+        <div class="btns">
+            <a class="btn primary" id="goVisit" href="#">방문 확정</a>
+            <a class="btn ghost" id="goCancel" href="#">방문 취소</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // nginx가 /api/만 백엔드로 프록시하므로, 처리 요청은 반드시 /api/로 보낸다.
+    const API_BASE = "http://101.79.9.218"; // 포트 없이 80으로 OK (nginx가 받음)
+
+    const p = new URLSearchParams(location.search);
+    const token = p.get("token");
+
+    if (!token) {
+        document.getElementById("desc").textContent = "유효하지 않은 링크입니다. (token 없음)";
+    } else {
+        document.getElementById("goVisit").href  = `${API_BASE}/api/reminders/visit?token=${encodeURIComponent(token)}`;
+        document.getElementById("goCancel").href = `${API_BASE}/api/reminders/cancel?token=${encodeURIComponent(token)}`;
+    }
+</script>
+</body>
+</html>

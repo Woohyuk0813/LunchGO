@@ -1,0 +1,74 @@
+node_modules/
+
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+application-secret.properties
+AWSCLIV2.pkg
+
+## mac OS 때문에 생기는 파일
+.DS_Store
+**/.DS_Store
+**/._*
+
+## api 명세서
+api_specification.csv
+docs/object-storage-manual.md
+.sample_images/
+
+## Frontend env
+frontend/.env
+frontend/.env.*
+!frontend/.env.production.sample
+.env
+.apm-local.env
+
+## Menu image sync artifacts
+/menu_images/
+/menu_real_images/
+/menu_images_upload.csv
+/menu_unique_names.csv
+/ncloud-menu-image-sync.skill
+/menu_images_ids.csv
+*.skill
+skills/
+
+## Scouter APM artifacts
+scouter-all-*.tar.gz
+scouter/agent.java/scouter.agent.jar
+scouter/*.csv
+
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/

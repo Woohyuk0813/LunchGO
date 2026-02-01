@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.LunchGo.review.mapper.MyReviewMapper">
+
+    <select id="selectMyReviews" resultType="com.example.LunchGo.review.mapper.row.MyReviewRow">
+        SELECT
+            r.review_id AS reviewId,
+            r.reservation_id AS reservationId,
+            r.restaurant_id AS restaurantId,
+            res.name AS restaurantName,
+            CONCAT(res.road_address, ' ', res.detail_address) AS restaurantAddress,
+            ROW_NUMBER() OVER (
+                PARTITION BY r.user_id, r.restaurant_id
+                ORDER BY COALESCE(slot.slot_date, DATE(r.created_at)), r.created_at
+            ) AS visitCount,
+            r.rating AS rating,
+            r.created_at AS createdAt,
+            COALESCE(slot.slot_date, DATE(r.created_at)) AS visitDate,
+            r.content AS content,
+            r.status AS status,
+            tags.tags AS tags,
+            images.images AS images
+        FROM reviews r
+        JOIN restaurants res ON res.restaurant_id = r.restaurant_id
+        LEFT JOIN reservations rs ON rs.reservation_id = r.reservation_id
+        LEFT JOIN restaurant_reservation_slots slot ON slot.slot_id = rs.slot_id
+        LEFT JOIN (
+            SELECT m.review_id, GROUP_CONCAT(rt.name ORDER BY rt.tag_id SEPARATOR '||') AS tags
+            FROM review_tag_maps m
+            JOIN review_tags rt ON rt.tag_id = m.tag_id
+            GROUP BY m.review_id
+        ) tags ON tags.review_id = r.review_id
+        LEFT JOIN (
+            SELECT review_id, GROUP_CONCAT(image_url ORDER BY sort_order SEPARATOR '||') AS images
+            FROM review_images
+            GROUP BY review_id
+        ) images ON images.review_id = r.review_id
+        WHERE r.user_id = #{userId}
+        ORDER BY r.created_at DESC
+    </select>
+</mapper>

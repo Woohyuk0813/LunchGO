@@ -1,0 +1,5 @@
+USE lunchgo;
+
+ALTER TABLE refunds
+  ADD COLUMN payment_type VARCHAR(20) NOT NULL COMMENT '결제유형 스냅샷(DEPOSIT/PREPAID_FOOD)' AFTER policy_case,
+  ADD COLUMN card_type VARCHAR(20) NOT NULL COMMENT '카드구분 스냅샷(PERSONAL/CORPORATE/UNKNOWN)' AFTER payment_type;

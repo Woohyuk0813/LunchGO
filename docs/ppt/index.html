@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LunchGO Load Test Deck</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="deck">
+      <section class="slide active" data-slide>
+        <div class="slide-inner title">
+          <div class="eyebrow">LunchGO Performance</div>
+          <h1>부하 테스트 요약</h1>
+          <p class="subtitle">로그인 & 예약 부하 테스트 결과를 차트로 시각화</p>
+          <div class="meta meta-stack">
+            <span>🎯 대상: /api/login, /api/reservations</span>
+            <span>🧰 도구: k6 + Scouter</span>
+            <div class="tool-badges">
+              <span class="badge badge-k6">
+                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/k6.svg" alt="" />
+                k6
+              </span>
+              <span class="badge badge-scouter">
+                <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/apachejmeter.svg" alt="" />
+                Scouter APM
+              </span>
+            </div>
+          </div>
+          <div class="hint">→ 키로 다음 슬라이드</div>
+        </div>
+      </section>
+
+      <section class="slide" data-slide>
+        <div class="slide-inner">
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">Login Load Test · Queue ON/OFF</div>
+              <h2>로그인 부하 테스트</h2>
+            </div>
+            <div class="controls">
+              <button type="button" class="toggle active" data-mode="avg" data-target="login">avg</button>
+              <button type="button" class="toggle" data-mode="p95" data-target="login">p95</button>
+            </div>
+          </header>
+
+          <div class="chart-block">
+            <div class="block-title">Latency (ms)</div>
+            <div class="legend">
+              <span class="legend-item"><i class="dot login-flow"></i>login_flow</span>
+              <span class="legend-item"><i class="dot queue-wait"></i>queue_wait</span>
+              <span class="legend-item"><i class="dot login-req"></i>login_req</span>
+            </div>
+            <div class="latency-layout">
+              <div id="latency-chart" class="latency-chart"></div>
+              <aside id="latency-meta" class="latency-meta"></aside>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="chart-block">
+              <div class="block-title">Iterations / sec</div>
+              <div id="iter-chart" class="iter-chart"></div>
+            </div>
+            <div class="chart-block">
+              <div class="block-title">CPU 관찰</div>
+              <div id="cpu-chart" class="cpu-chart"></div>
+              <div class="note">범위 표시는 관찰 구간 평균 범위</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide compact" data-slide>
+        <div class="slide-inner">
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">Reservation Load Test</div>
+              <h2>예약 부하 테스트 · 단일 예약</h2>
+            </div>
+            <div class="controls">
+              <button type="button" class="toggle active" data-mode="avg" data-target="res1">avg</button>
+              <button type="button" class="toggle" data-mode="p95" data-target="res1">p95</button>
+            </div>
+          </header>
+
+          <div class="chart-block">
+            <div class="block-title">Latency (ms)</div>
+            <div class="legend">
+              <span class="legend-item"><i class="dot login-flow"></i>http_req_duration</span>
+              <span class="legend-item"><i class="dot queue-wait"></i>expected_response</span>
+              <span class="legend-item"><i class="dot login-req"></i>iteration_duration</span>
+            </div>
+            <div class="latency-layout">
+              <div id="res1-latency-chart" class="latency-chart"></div>
+              <aside id="res1-meta" class="latency-meta"></aside>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="chart-block">
+              <div class="block-title">Iterations / sec</div>
+              <div id="res1-iter-chart" class="iter-chart"></div>
+            </div>
+            <div class="chart-block">
+              <div class="block-title">HTTP req / sec</div>
+              <div id="res1-req-chart" class="iter-chart"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide compact" data-slide>
+        <div class="slide-inner">
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">Reservation Load Test</div>
+              <h2>예약 부하 테스트 · 중복 요청</h2>
+            </div>
+            <div class="controls">
+              <button type="button" class="toggle active" data-mode="avg" data-target="res2">avg</button>
+              <button type="button" class="toggle" data-mode="p95" data-target="res2">p95</button>
+            </div>
+          </header>
+
+          <div class="chart-block">
+            <div class="block-title">Latency (ms)</div>
+            <div class="legend">
+              <span class="legend-item"><i class="dot login-flow"></i>http_req_duration</span>
+              <span class="legend-item"><i class="dot queue-wait"></i>expected_response</span>
+              <span class="legend-item"><i class="dot login-req"></i>iteration_duration</span>
+            </div>
+            <div class="latency-layout">
+              <div id="res2-latency-chart" class="latency-chart"></div>
+              <aside id="res2-meta" class="latency-meta"></aside>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="chart-block">
+              <div class="block-title">Latency (avg/p95)</div>
+              <div id="res2-latency-summary" class="iter-chart"></div>
+            </div>
+            <div class="chart-block">
+              <div class="block-title">Iteration (avg/p95)</div>
+              <div id="res2-iteration-summary" class="iter-chart"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="nav">
+      <button class="nav-btn" data-nav="prev">←</button>
+      <span class="nav-index" id="nav-index">1 / 2</span>
+      <button class="nav-btn" data-nav="next">→</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

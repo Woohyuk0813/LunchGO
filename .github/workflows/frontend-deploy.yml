@@ -1,0 +1,44 @@
+name: Frontend Deploy to Object Storage
+
+on:
+  push:
+    branches: ["dev"]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend-deploy.yml"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      VITE_API_BASE_URL: http://${{ secrets.SERVER_IP }}
+      VITE_PORTONE_STORE_ID: ${{ secrets.VITE_PORTONE_STORE_ID }}
+      VITE_PORTONE_CHANNEL_KEY: ${{ secrets.VITE_PORTONE_CHANNEL_KEY }}
+      VITE_PORTONE_OPEN_TYPE: ${{ secrets.VITE_PORTONE_OPEN_TYPE }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.NCP_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.NCP_SECRET_KEY }}
+      AWS_S3_FORCE_PATH_STYLE: "true"
+      BUCKET: ${{ secrets.NCP_BUCKET_NAME }}
+      ENDPOINT_URL: http://kr.object.ncloudstorage.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend
+
+      - name: Install awscli
+        run: python -m pip install --upgrade pip awscli
+
+      - name: Upload dist to Object Storage
+        run: |
+          aws --endpoint-url="${ENDPOINT_URL}" s3 sync \
+            frontend/dist "s3://${BUCKET}" --delete

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>LunchGo Email Verification</title>
+    <style>
+        /* 모바일 반응형 처리 */
+        @media only screen and (max-width: 600px) {
+            .container { width: 100% !important; }
+            .content { padding: 20px !important; }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F8F9FA; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Helvetica', 'Arial', sans-serif;">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #F8F9FA;">
+    <tr>
+        <td align="center" style="padding: 40px 0;">
+
+            <table class="container" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #FFFFFF; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden;">
+
+                <tr>
+                    <td height="6" style="background-color: #FF6B4A; background: linear-gradient(135deg, #FF6B4A 0%, #FFAA8D 50%, #FFC4B8 100%);"></td>
+                </tr>
+
+                <tr>
+                    <td class="content" style="padding: 40px 40px 20px 40px; text-align: center;">
+                        <h1 style="margin: 0; color: #FF6B4A; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">LunchGo</h1>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="content" style="padding: 0 40px; text-align: center;">
+                        <h2 style="margin: 0 0 16px 0; color: #1E3A5F; font-size: 22px; font-weight: 700;">
+                            이메일 인증 코드
+                        </h2>
+                        <p style="margin: 0 0 32px 0; color: #495057; font-size: 16px; line-height: 1.6;">
+                            안녕하세요, LunchGo입니다.<br/>
+                            아래 인증 코드를 복사하여 인증 화면에 입력해주세요.
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="content" style="padding: 0 40px 40px 40px; text-align: center;">
+                        <div style="background-color: #F8F9FA; border: 1px solid #E9ECEF; border-radius: 8px; padding: 24px;">
+                                <span th:text="${code}" style="color: #FF6B4A; font-size: 32px; font-weight: 800; letter-spacing: 4px; display: block;">
+
+                                </span>
+                        </div>
+                        <p style="margin-top: 16px; color: #ADB5BD; font-size: 13px;">
+                            인증 코드는 3분간 유효합니다.
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="background-color: #F1F3F5; padding: 24px; text-align: center;">
+                        <p style="margin: 0; color: #ADB5BD; font-size: 12px; line-height: 1.5;">
+                            본 메일은 발신 전용입니다.<br/>
+                            Copyright © LunchGo All rights reserved.
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

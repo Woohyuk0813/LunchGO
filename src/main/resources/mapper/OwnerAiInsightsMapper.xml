@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.LunchGo.restaurant.mapper.OwnerAiInsightsMapper">
+
+    <select id="selectWeeklyBaselineByWeekday"
+            resultType="com.example.LunchGo.restaurant.mapper.row.WeeklyBaselineRow">
+        SELECT
+            DAYOFWEEK(d.slot_date) AS weekday,
+            AVG(d.daily_count) AS avgCount,
+            STDDEV_POP(d.daily_count) AS stddev
+        FROM (
+            SELECT
+                slot.slot_date,
+                COUNT(*) AS daily_count
+            FROM reservations r
+            JOIN restaurant_reservation_slots slot ON slot.slot_id = r.slot_id
+            WHERE slot.restaurant_id = #{restaurantId}
+              AND r.status IN ('CONFIRMED', 'PREPAID_CONFIRMED', 'COMPLETED')
+              AND slot.slot_date >= DATE_SUB(#{weekStart}, INTERVAL #{weeksBack} WEEK)
+              AND slot.slot_date &lt; #{weekStart}
+            GROUP BY slot.slot_date
+        ) d
+        GROUP BY DAYOFWEEK(d.slot_date)
+        ORDER BY weekday
+    </select>
+
+    <select id="selectCafeteriaMenusForWeek"
+            resultType="com.example.LunchGo.restaurant.mapper.row.CafeteriaMenuSignalRow">
+        SELECT
+            user_id AS userId,
+            served_date AS servedDate,
+            main_menu_names AS mainMenuNames,
+            raw_text AS rawText
+        FROM cafeteria_menus
+        WHERE served_date BETWEEN #{weekStart} AND #{weekEnd}
+        ORDER BY served_date ASC
+    </select>
+
+    <select id="selectPreferenceKeywords"
+            resultType="com.example.LunchGo.restaurant.mapper.row.PreferenceSignalRow">
+        SELECT
+            sm.user_id AS userId,
+            s.keyword AS keyword,
+            s.is_liked AS liked
+        FROM speciality_mappings sm
+        JOIN specialities s ON s.speciality_id = sm.speciality_id
+    </select>
+
+    <select id="selectRestaurantMenuKeywords" resultType="string">
+        SELECT DISTINCT
+            name
+        FROM menus
+        WHERE restaurant_id = #{restaurantId}
+          AND is_deleted = 0
+        ORDER BY name
+    </select>
+
+    <select id="selectPublicBookmarkCount" resultType="int">
+        SELECT
+            COUNT(*) AS cnt
+        FROM bookmarks
+        WHERE restaurant_id = #{restaurantId}
+          AND is_public = 1
+    </select>
+
+    <select id="selectApprovedBookmarkLinkCount" resultType="int">
+        SELECT
+            COUNT(*) AS cnt
+        FROM bookmark_links
+        WHERE status = 'APPROVED'
+    </select>
+
+    <select id="selectCompanyVisitorCounts"
+            resultType="com.example.LunchGo.restaurant.mapper.row.CompanyVisitorCountRow">
+        SELECT
+            u.company_name AS companyName,
+            COUNT(DISTINCT r.user_id) AS visitorCount
+        FROM reservations r
+        JOIN restaurant_reservation_slots slot ON slot.slot_id = r.slot_id
+        JOIN users u ON u.user_id = r.user_id
+        WHERE slot.restaurant_id = #{restaurantId}
+          AND r.status IN ('CONFIRMED', 'PREPAID_CONFIRMED', 'COMPLETED')
+          AND slot.slot_date >= DATE_SUB(#{weekStart}, INTERVAL #{weeksBack} WEEK)
+          AND slot.slot_date &lt; #{weekStart}
+        GROUP BY u.company_name
+        ORDER BY visitorCount DESC
+    </select>
+
+</mapper>

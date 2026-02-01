@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>LunchGo 처리 결과</title>
+    <style>
+        body { margin:0; font-family: 'Apple SD Gothic Neo','Malgun Gothic',Arial,sans-serif; background:#f8f9fa; }
+        .wrap { max-width:520px; margin:0 auto; padding:24px; }
+        .card { background:#fff; border:1px solid #e9ecef; border-radius:12px; padding:22px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+        .brand { font-weight:800; color:#ff6b4a; font-size:22px; margin:0 0 10px; }
+        .msg { font-weight:800; color:#1e3a5f; font-size:18px; margin:0; }
+        .sub { margin-top:10px; color:#6c757d; font-size:13px; line-height:1.6; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <div class="brand">LunchGo</div>
+
+        <p class="msg" th:if="${result == 'will_visit'}">방문 예정으로 처리되었습니다.</p>
+        <p class="msg" th:if="${result == 'cancel_visit'}">방문 취소로 처리되었습니다.</p>
+        <p class="msg" th:if="${result == 'invalid'}">유효하지 않은 링크이거나 이미 처리된 요청입니다.</p>
+
+        <div class="sub">
+            이 창은 닫으셔도 됩니다.
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+name: Backend Deploy to Private Server
+
+on:
+  push:
+    branches: ["dev"]
+    paths:
+      - "src/**"
+      - "build.gradle"
+      - "settings.gradle"
+      - "Dockerfile"
+      - ".github/workflows/backend-deploy.yml"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Build with Gradle
+        run: |
+          chmod +x gradlew
+          ./gradlew clean build -x test
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image (linux/amd64)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: pgw10243/lunchgo-backend:dev
+
+      - name: Deploy to Server via Bastion
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            ssh -i /home/ncp-user/lunchgo.pem root@10.0.2.6 "
+              if [ ! -f /opt/scouter/scouter/agent.host/conf/scouter.conf ]; then
+                echo 'scouter.host scouter.conf missing: /opt/scouter/scouter/agent.host/conf/scouter.conf'
+                exit 1
+              fi
+              if ! docker ps --format '{{.Names}}' | grep -q '^scouter-host$'; then
+                docker rm -f scouter-host || true
+                docker run -d --name scouter-host --restart=always \
+                  --pid=host --net=host \
+                  -v /proc:/host/proc:ro \
+                  -v /sys:/host/sys:ro \
+                  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+                  -v /opt/scouter/scouter/agent.host:/scouter/agent.host \
+                  eclipse-temurin:11-jre \
+                  java -Xms128m -Xmx128m \
+                    -Dscouter.config=/scouter/agent.host/conf/scouter.conf \
+                    -Dscouter.host.proc.dir=/host/proc \
+                    -Dscouter.host.sys.dir=/host/sys \
+                    -cp /scouter/agent.host/scouter.host.jar \
+                    scouter.boot.Boot
+              fi
+              docker rm -f lunchgo-backend || true
+              docker pull pgw10243/lunchgo-backend:dev
+              mkdir -p /var/log/lunchgo
+              docker run --env-file /opt/lunchgo/.env \
+                -v /opt/lunchgo/fonts:/app/fonts:ro \
+                -e LOG_PATH=/var/log/lunchgo \
+                -e LOGIN_QUEUE_ENABLED=true \
+                -e LOGIN_QUEUE_CAPACITY=12 \
+                -e LOGIN_QUEUE_TOKEN_TTL_MS=120000 \
+                -e TZ=Asia/Seoul \
+                -e JAVA_TOOL_OPTIONS=-Duser.timezone=Asia/Seoul \
+                -v /opt/scouter/scouter/agent.java:/app/scouter/agent.java:ro \
+                -v /opt/scouter/scouter/agent.java/conf/scouter.conf:/app/scouter/conf/scouter.conf:ro \
+                -v /var/log/lunchgo:/var/log/lunchgo \
+                -p 8080:8080 --name lunchgo-backend -d pgw10243/lunchgo-backend:dev
+            "

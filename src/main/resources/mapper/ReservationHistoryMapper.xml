@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.LunchGo.reservation.mapper.ReservationHistoryMapper">
+
+    <select id="selectReservationHistory" resultType="com.example.LunchGo.reservation.mapper.row.ReservationHistoryRow">
+        SELECT
+            r.reservation_id AS reservationId,
+            r.reservation_code AS reservationCode,
+            res.restaurant_id AS restaurantId,
+            res.name AS restaurantName,
+            CONCAT(res.road_address, ' ', res.detail_address) AS restaurantAddress,
+            slot.slot_date AS slotDate,
+            slot.slot_time AS slotTime,
+            r.party_size AS partySize,
+            r.status AS reservationStatus,
+            cxl.cancelled_by AS cancelledBy,
+            cxl.reason AS cancelledReason,
+            cxl.cancelled_at AS cancelledAt,
+            CASE
+                WHEN r.status = 'COMPLETED' THEN rvs.visit_number
+                ELSE NULL
+            END AS visitCount,
+            CASE
+                WHEN r.status = 'COMPLETED' THEN rvs.days_since_last_visit
+                ELSE NULL
+            END AS daysSinceLastVisit,
+            rc.confirmed_amount AS receiptAmount,
+            pay.paid_amount AS paidAmount,
+            r.total_amount AS totalAmount,
+            rv.review_id AS reviewId,
+            rv.rating AS reviewRating,
+            rv.content AS reviewContent,
+            DATE(rv.created_at) AS reviewCreatedAt,
+            GROUP_CONCAT(DISTINCT rt.name ORDER BY rt.tag_id SEPARATOR '||') AS reviewTags
+        FROM reservations r
+        JOIN restaurant_reservation_slots slot ON slot.slot_id = r.slot_id
+        JOIN restaurants res ON res.restaurant_id = slot.restaurant_id
+        LEFT JOIN (
+            SELECT r1.*
+            FROM receipts r1
+            JOIN (
+                SELECT reservation_id, MAX(receipt_id) AS max_id
+                FROM receipts
+                GROUP BY reservation_id
+            ) r2 ON r2.max_id = r1.receipt_id
+        ) rc ON rc.reservation_id = r.reservation_id
+        LEFT JOIN reservation_visit_stats rvs ON rvs.reservation_id = r.reservation_id
+        LEFT JOIN reservation_cancellations cxl ON cxl.reservation_id = r.reservation_id
+        LEFT JOIN reviews rv ON rv.reservation_id = r.reservation_id
+        LEFT JOIN review_tag_maps rtm ON rtm.review_id = rv.review_id
+        LEFT JOIN review_tags rt ON rt.tag_id = rtm.tag_id
+        LEFT JOIN (
+            SELECT reservation_id, SUM(amount) AS paid_amount
+            FROM payments
+            WHERE status = 'PAID'
+            GROUP BY reservation_id
+        ) pay ON pay.reservation_id = r.reservation_id
+        WHERE r.user_id = #{userId}
+        <if test="statuses != null and statuses.size() &gt; 0">
+            AND r.status IN
+            <foreach collection="statuses" item="status" open="(" separator="," close=")">
+                #{status}
+            </foreach>
+        </if>
+        GROUP BY
+            r.reservation_id,
+            r.reservation_code,
+            res.restaurant_id,
+            res.name,
+            res.road_address,
+            res.detail_address,
+            slot.slot_date,
+            slot.slot_time,
+            r.party_size,
+            r.status,
+            cxl.cancelled_by,
+            cxl.reason,
+            cxl.cancelled_at,
+            rvs.visit_number,
+            rvs.days_since_last_visit,
+            rc.confirmed_amount,
+            pay.paid_amount,
+            r.total_amount,
+            rv.review_id,
+            rv.rating,
+            rv.content,
+            rv.created_at
+        ORDER BY slot.slot_date ${orderDirection}, slot.slot_time ${orderDirection}
+    </select>
+</mapper>

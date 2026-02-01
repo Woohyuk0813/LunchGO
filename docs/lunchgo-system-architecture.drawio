@@ -1,0 +1,148 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.3.2">
+  <diagram id="lunchgo-architecture" name="Page-1">
+    <mxGraphModel dx="2220" dy="1967" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1000" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="rounded=1;dashed=1;strokeWidth=2;strokeColor=#4F81BD;fillColor=#F4F7FB;whiteSpace=wrap;html=1;" value="NCP VPC" vertex="1">
+          <mxGeometry height="720" width="1040" x="520" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3" parent="1" style="rounded=1;dashed=1;strokeColor=#9E9E9E;fillColor=#FFFFFF;whiteSpace=wrap;html=1;" value="퍼블릭 서브넷" vertex="1">
+          <mxGeometry height="560" width="300" x="560" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="1" style="rounded=1;dashed=1;strokeColor=#9E9E9E;fillColor=#FFFFFF;whiteSpace=wrap;html=1;" value="프라이빗 서브넷" vertex="1">
+          <mxGeometry height="560" width="640" x="880" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="1" style="shape=mxgraph.networks.load_balancer;rounded=1;strokeColor=#1565C0;fillColor=#E3F2FD;whiteSpace=wrap;html=1;" value="Nginx 게이트웨이&#10;(리버스 프록시)" vertex="1">
+          <mxGeometry height="70" width="240" x="590" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="1" style="shape=mxgraph.networks.server;rounded=1;strokeColor=#2E7D32;fillColor=#E8F5E9;whiteSpace=wrap;html=1;" value="백엔드 WAS&#10;(Spring Boot)" vertex="1">
+          <mxGeometry height="70" width="220" x="920" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="1" style="shape=cylinder;rounded=1;strokeColor=#0277BD;fillColor=#E1F5FE;whiteSpace=wrap;html=1;" value="MySQL" vertex="1">
+          <mxGeometry height="60" width="220" x="920" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="1" style="shape=cylinder;rounded=1;strokeColor=#C62828;fillColor=#FFEBEE;whiteSpace=wrap;html=1;" value="Redis" vertex="1">
+          <mxGeometry height="60" width="220" x="920" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="1" style="shape=mxgraph.networks.router;rounded=1;strokeColor=#F9A825;fillColor=#FFF8E1;whiteSpace=wrap;html=1;" value="NAT 게이트웨이" vertex="1">
+          <mxGeometry height="60" width="220" x="920" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="1" style="shape=cylinder;rounded=1;strokeColor=#00838F;fillColor=#E0F7FA;whiteSpace=wrap;html=1;" value="오브젝트 스토리지&#10;(정적 호스팅)" vertex="1">
+          <mxGeometry height="90" width="240" x="130" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="23" parent="1" style="shape=cylinder;rounded=1;strokeColor=#00838F;fillColor=#E0F7FA;whiteSpace=wrap;html=1;" value="오브젝트 스토리지&#10;(파일 업로드)" vertex="1">
+          <mxGeometry height="90" width="240" x="130" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="1" style="shape=mxgraph.basic.display;rounded=1;strokeColor=#EF6C00;fillColor=#FFF3E0;whiteSpace=wrap;html=1;" value="프론트엔드&#10;(Vue/Vite)" vertex="1">
+          <mxGeometry height="90" width="240" x="130" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="1" style="shape=cloud;rounded=1;strokeColor=#546E7A;fillColor=#ECEFF1;whiteSpace=wrap;html=1;" value="GitHub Actions&#10;(CI/CD)" vertex="1">
+          <mxGeometry height="80" width="400" x="640" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="1" style="shape=cloud;rounded=1;strokeColor=#6D9EEB;fillColor=#F3F6FB;whiteSpace=wrap;html=1;align=left;spacingLeft=12;" value="외부 API&#10;카카오 맵 API&#10;카카오 모빌리티 API&#10;OpenWeather&#10;CoolSMS&#10;Google SMTP&#10;PortOne&#10;Gemini AI&#10;네이버 클라우드 챗봇&#10;네이버 CLOVA OCR" vertex="1">
+          <mxGeometry height="480" width="260" x="1620" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="1" style="shape=mxgraph.basic.user;whiteSpace=wrap;html=1;strokeColor=#333333;fillColor=#FFFFFF;" value="사용자" vertex="1">
+          <mxGeometry height="100" width="80" x="20" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="15" parent="1" style="shape=mxgraph.basic.user;whiteSpace=wrap;html=1;strokeColor=#333333;fillColor=#FFF8E1;" value="운영 PC" vertex="1">
+          <mxGeometry height="100" width="80" x="20" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="16" parent="1" style="shape=mxgraph.networks.vpn;rounded=1;strokeColor=#9E9E9E;fillColor=#F3F3F3;whiteSpace=wrap;html=1;" value="SSH 터널" vertex="1">
+          <mxGeometry height="60" width="260" x="130" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="17" parent="1" style="shape=mxgraph.networks.monitor;rounded=1;strokeColor=#EF6C00;fillColor=#FFF3E0;whiteSpace=wrap;html=1;" value="Prometheus" vertex="1">
+          <mxGeometry height="70" width="240" x="590" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="18" parent="1" style="shape=mxgraph.networks.dashboard;rounded=1;strokeColor=#EF6C00;fillColor=#FFF3E0;whiteSpace=wrap;html=1;" value="Grafana" vertex="1">
+          <mxGeometry height="70" width="240" x="590" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="19" parent="1" style="shape=mxgraph.networks.server;rounded=1;strokeColor=#00796B;fillColor=#E0F2F1;whiteSpace=wrap;html=1;" value="스카우터 컬렉터" vertex="1">
+          <mxGeometry height="60" width="260" x="1180" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="20" parent="1" style="shape=mxgraph.networks.server;rounded=1;strokeColor=#00796B;fillColor=#E0F2F1;whiteSpace=wrap;html=1;" value="스카우터 웹앱" vertex="1">
+          <mxGeometry height="60" width="260" x="1180" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="21" parent="1" style="shape=mxgraph.networks.agent;rounded=1;strokeColor=#0277BD;fillColor=#E1F5FE;whiteSpace=wrap;html=1;" value="MySQL 익스포터" vertex="1">
+          <mxGeometry height="55" width="260" x="1180" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="22" parent="1" style="shape=mxgraph.networks.agent;rounded=1;strokeColor=#C62828;fillColor=#FFEBEE;whiteSpace=wrap;html=1;" value="Redis 익스포터" vertex="1">
+          <mxGeometry height="55" width="260" x="1180" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="10" value="HTTP&#10;정적 리소스">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="11" value="정적 호스팅">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="5" value="HTTP API 호출">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="6" value="/api 프록시">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="7" value="JDBC">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="8" value="캐시/세션">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="9" value="NAT 통해 외부 통신">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="13" value="HTTP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="10" value="프론트 배포">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="6" value="백엔드 배포">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="5" value="스카우터 UI /scouter">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="16" value="SSH -L 6100/6180/6188">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="19" value="포워딩 6100/6180/6188">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="20" value="/scouter 프록시">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="19" value="APM 에이전트 6100">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="19" value="스카우터 연결">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="21" value="스크레이프 9104">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="1" source="17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="22" value="스크레이프 9121">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e19" edge="1" parent="1" source="21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="7" value="메트릭">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" edge="1" parent="1" source="22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="8" value="메트릭">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e21" edge="1" parent="1" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="18" value="Grafana 3000 포트">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e22" edge="1" parent="1" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="17" value="Prometheus 9090 포트">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e23" edge="1" parent="1" source="14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="11" value="HTTP">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e24" edge="1" parent="1" source="6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="23" value="HTTP 업로드/다운로드">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>LunchGo 예약 확인</title>
+    <style>
+        body { margin:0; font-family: 'Apple SD Gothic Neo','Malgun Gothic',Arial,sans-serif; background:#f8f9fa; }
+        .wrap { max-width:520px; margin:0 auto; padding:24px; }
+        .card { background:#fff; border:1px solid #e9ecef; border-radius:12px; padding:22px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+        .brand { font-weight:800; color:#ff6b4a; font-size:22px; margin:0 0 10px; }
+        .title { font-weight:800; color:#1e3a5f; font-size:20px; margin:0 0 8px; }
+        .desc { color:#495057; font-size:14px; line-height:1.6; margin:0 0 16px; }
+        .warn { margin-top:10px; color:#6c757d; font-size:12px; line-height:1.5; }
+        .btns { display:flex; gap:10px; margin-top:16px; }
+        a.btn { flex:1; display:block; text-align:center; padding:14px 12px; border-radius:10px; text-decoration:none; font-weight:800; }
+        a.visit { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+        a.cancel { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+        .hint { margin-top:14px; font-size:12px; color:#adb5bd; text-align:center; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <div class="brand">LunchGo</div>
+        <h1 class="title">예약 1시간 전 확인</h1>
+        <p class="desc">
+            방문 여부를 선택해주세요.<br/>
+            선택 후에는 되돌릴 수 없습니다.
+        </p>
+
+        <div class="btns">
+            <a class="btn visit"
+               th:href="@{/api/reminders/visit(token=${token})}">
+                방문 예정
+            </a>
+
+            <a class="btn cancel"
+               th:href="@{/api/reminders/cancel(token=${token})}">
+                방문 취소
+            </a>
+        </div>
+
+        <p class="warn">
+            미응답 시 메뉴 준비가 늦어질 수 있습니다. 위 링크를 통해 응답해주세요.
+        </p>
+        <div class="hint" th:if="${mode == 'visit'}">현재 링크: 방문 확인(visit)</div>
+        <div class="hint" th:if="${mode == 'cancel'}">현재 링크: 방문 취소(cancel)</div>
+    </div>
+</div>
+</body>
+</html>

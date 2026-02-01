@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.LunchGo.reservation.mapper.ReservationVisitStatsMapper">
+
+    <select id="selectRestaurantUserStatsForUpdate"
+            resultType="com.example.LunchGo.reservation.mapper.row.RestaurantUserStatsRow">
+        SELECT
+            visit_cnt AS visitCount,
+            last_visit_date AS lastVisitDate
+        FROM restaurant_user_stats
+        WHERE restaurant_id = #{restaurantId}
+          AND user_id = #{userId}
+        FOR UPDATE
+    </select>
+
+    <insert id="upsertRestaurantUserStats">
+        INSERT INTO restaurant_user_stats (
+            restaurant_id,
+            user_id,
+            visit_cnt,
+            last_visit_date
+        ) VALUES (
+            #{restaurantId},
+            #{userId},
+            #{visitCount},
+            #{lastVisitDate}
+        )
+        ON DUPLICATE KEY UPDATE
+            visit_cnt = VALUES(visit_cnt),
+            last_visit_date = VALUES(last_visit_date)
+    </insert>
+
+    <insert id="insertReservationVisitStats">
+        INSERT INTO reservation_visit_stats (
+            reservation_id,
+            user_id,
+            restaurant_id,
+            visit_number,
+            prev_visit_date,
+            days_since_last_visit
+        ) VALUES (
+            #{reservationId},
+            #{userId},
+            #{restaurantId},
+            #{visitNumber},
+            #{prevVisitDate},
+            #{daysSinceLastVisit}
+        )
+    </insert>
+</mapper>

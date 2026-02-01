@@ -1,0 +1,85 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.8'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+description = 'LunchGO project for Spring Boot'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// 롬복
+	compileOnly 'org.projectlombok:lombok:1.18.30'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+	// JPA + MyBatis
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.5'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// Redis 의존성 추가(lettuce)
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.apache.commons:commons-pool2'
+	implementation 'org.redisson:redisson-spring-boot-starter:3.43.0'
+
+	//이메일 의존성 추가
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Thymeleaf (HTML 템플릿 엔진)
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// naver cloud object storage(aws s3 호환) 의존성 추가
+	implementation 'software.amazon.awssdk:s3:2.25.63'
+
+	//coolSMS 의존성 주입
+	implementation 'net.nurigo:sdk:4.3.0'
+	// ModelMapper
+	implementation 'org.modelmapper:modelmapper:3.2.0'
+
+	// spring security
+	implementation "org.springframework.boot:spring-boot-starter-security"
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	implementation 'commons-codec:commons-codec:1.16.0'
+	implementation 'org.ahocorasick:ahocorasick:0.6.3'
+
+	// JWT 라이브러리
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	//langchain 이용한 AI insights
+	implementation 'dev.langchain4j:langchain4j:0.34.0'
+	implementation 'dev.langchain4j:langchain4j-google-ai-gemini:0.34.0'
+	implementation 'org.apache.pdfbox:pdfbox:3.0.2'
+
+	// 맥(Mac) 환경에서 Netty(Redisson이 내부적으로 사용)가 DNS를 해석할 때 성능 저하나 지연을 유발할 수 있어 의존성 추가
+	implementation 'io.netty:netty-resolver-dns-native-macos:4.1.104.Final:osx-aarch_64'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+
+

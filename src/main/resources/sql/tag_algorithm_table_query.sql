@@ -1,0 +1,40 @@
+CREATE TABLE tag_maps (
+                          tag_map_id   BIGINT NOT NULL AUTO_INCREMENT COMMENT '매핑ID',
+                          tag_id       BIGINT NOT NULL COMMENT '식당태그ID',
+                          specialty_id BIGINT NOT NULL COMMENT '즐겨찾기ID',
+                          weight       TINYINT NOT NULL COMMENT '선호도',
+                          PRIMARY KEY (tag_map_id)
+);
+
+INSERT INTO tag_maps (specialty_id, tag_id, weight) VALUES
+                                                        (1, 40, 0),
+                                                        (2, 40, 1),
+                                                        (3, 39, 0),
+                                                        (3, 6, 0),
+                                                        (4, 39, 1),
+                                                        (4, 6, 1),
+                                                        (5, 37, 0),
+                                                        (6, 37, 1),
+                                                        (7, 29, 0),
+                                                        (8, 29, 1),
+                                                        (9, 46, 1),
+                                                        (10, 46, 0),
+                                                        (11, 4, 0),
+                                                        (11, 29, 0),
+                                                        (12, 26, 1),
+                                                        (12, 25, 1),
+                                                        (13, 27, 0),
+                                                        (14, 28, 0),
+                                                        (15, 34, 0),
+                                                        (16, 30, 0),
+                                                        (17, 31, 0),
+                                                        (18, 32, 0),
+                                                        (18, 4, 0),
+                                                        (19, 34, 0),
+                                                        (19, 35, 0),
+                                                        (19, 36, 0),
+                                                        (19, 37, 0),
+                                                        (20, 45, 1),
+                                                        (21, 42, 0),
+                                                        (22, 43, 0);
+

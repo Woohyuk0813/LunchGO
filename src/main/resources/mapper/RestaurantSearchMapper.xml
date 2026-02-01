@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.LunchGo.restaurant.mapper.RestaurantSearchMapper">
+
+    <select id="findAvailableRestaurantIds" parameterType="com.example.LunchGo.restaurant.dto.RestaurantSearchParameter" resultType="long">
+        SELECT r.restaurant_id
+        FROM restaurants r
+        <if test="menuTypes != null and menuTypes.size > 0">
+            JOIN restaurant_tag_maps rtm_menu ON r.restaurant_id = rtm_menu.restaurant_id
+            JOIN search_tags st_menu ON st_menu.tag_id = rtm_menu.tag_id
+        </if>
+        <if test="restaurantTags != null and restaurantTags.size > 0">
+            JOIN restaurant_tag_maps rtm_tag ON r.restaurant_id = rtm_tag.restaurant_id
+            JOIN search_tags st_tag ON st_tag.tag_id = rtm_tag.tag_id
+        </if>
+        <if test="date != null or time != null">
+            -- 지정한 날짜, 시간대, 식당ID로 생성된 예약 슬롯들을 확인(없으면 null)
+            LEFT JOIN restaurant_reservation_slots s
+                ON r.restaurant_id = s.restaurant_id
+                <choose>
+                    <when test="date != null">
+                        AND s.slot_date = #{date}
+                    </when>
+                    <otherwise>
+                        AND s.slot_date BETWEEN curdate() and date_add(curdate(), interval 14 day)
+                    </otherwise>
+                </choose>
+                <choose>
+                    <when test="time != null">
+                        AND s.slot_time = #{time} AND s.slot_time BETWEEN r.open_time and r.close_time
+                    </when>
+                    <otherwise>
+                        AND s.slot_time IN ('11:00:00', '12:00:00', '13:00:00', '14:00:00')
+                    </otherwise>
+                </choose>
+            -- 지정한 날짜, 시간대, 식당ID로 생성된 예약 슬롯들을 확인(없으면 null)
+            LEFT JOIN (
+                -- 지정한 날짜, 시간대에 특정 식당을 예약한 인원수 총합 계산
+                SELECT slot_id, COALESCE(SUM(party_size), 0) as total_party_size
+                FROM reservations
+                WHERE status IN ('TEMPORARY', 'CONFIRMED', 'PREPAID_CONFIRM', 'REFUND_PENDING')
+                GROUP BY slot_id
+            ) res ON s.slot_id = res.slot_id
+        </if>
+        <where>
+            r.status = 'OPEN'
+            <if test="date != null or time != null">
+                AND (
+                    -- Case 1: 특정 식당에 관한 예약 슬롯이 추가된 적이 없음
+                    s.slot_id IS NULL
+                    OR
+                    -- Case 2: 예약 슬롯이 존재하지만 잔여석이 충분함
+                    s.max_capacity >= (IFNULL(res.total_party_size, 0) + #{partySize})
+                )
+            </if>
+            <if test="menuTypes != null and menuTypes.size > 0">
+                AND st_menu.category = 'MENUTYPE'
+                AND st_menu.content IN
+                <foreach collection="menuTypes" item="menuType" open="(" separator="," close=")">
+                    #{menuType}
+                </foreach>
+            </if>
+            <if test="restaurantTags != null and restaurantTags.size > 0">
+                AND st_tag.category IN ('TABLETYPE', 'ATMOSPHERE', 'FACILITY')
+                AND st_tag.content IN
+                <foreach collection="restaurantTags" item="tag" open="(" separator="," close=")">
+                    #{tag}
+                </foreach>
+            </if>
+            <if test="preorderAvailable == true">
+                AND r.preorder_available = true
+            </if>
+            <if test="avoidIngredients != null and avoidIngredients.size > 0">
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM menus m
+                    JOIN menu_tag_maps mt ON m.menu_id = mt.menu_id
+                    JOIN search_tags st_ing ON st_ing.tag_id = mt.tag_id
+                    WHERE m.restaurant_id = r.restaurant_id
+                      AND st_ing.category = 'INGREDIENT'
+                      AND st_ing.content IN
+                      <foreach collection="avoidIngredients" item="ingredient" open="(" separator="," close=")">
+                        #{ingredient}
+                      </foreach>
+                )
+            </if>
+            <!--
+                TODO: 태그 검색 기능 확장
+            -->
+        </where>
+        GROUP BY r.restaurant_id
+        <if test="restaurantTags != null and restaurantTags.size > 0">
+            <bind name="restaurantTagCount" value="restaurantTags.size" />
+            HAVING COUNT(DISTINCT st_tag.content) = #{restaurantTagCount}
+        </if>
+    </select>
+
+</mapper>

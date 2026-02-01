@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.LunchGo.member.mapper.MemberMapper">
+
+    <resultMap id="MemberInfoMap" type="com.example.LunchGo.member.dto.MemberInfo">
+        <id property="email" column="email"/>
+
+        <result property="name" column="name"/>
+        <result property="nickname" column="nickname"/>
+        <result property="phone" column="phone"/>
+        <result property="birth" column="birth"/> <result property="gender" column="gender"/>
+        <result property="image" column="image"/>
+        <result property="companyName" column="company_name"/>
+        <result property="companyAddress" column="company_address"/>
+        <result property="emailAuthentication" column="email_authentication"/>
+
+        <collection property="specialities" ofType="com.example.LunchGo.member.dto.Speciality">
+            <id property="specialityId" column="speciality_id"/>
+            <result property="keyword" column="keyword"/>
+            <result property="isLiked" column="is_liked"/>
+        </collection>
+    </resultMap>
+
+   <select id="selectUser" parameterType="long" resultMap="MemberInfoMap">
+       SELECT u.email, u.name, u.nickname, u.phone, u.birth, u.gender, u.image, u.company_name, u.company_address, u.email_authentication, s.speciality_id, s.keyword, s.is_liked
+        FROM users u left join speciality_mappings sm on u.user_id = sm.user_id
+        left join specialities s on s.speciality_id = sm.speciality_id
+        WHERE u.user_id = #{userId} and status = 'ACTIVE'
+   </select>
+
+
+    <update id="updateUser">
+        UPDATE users set nickname = #{nickname}, birth = #{birth}, gender=#{gender}, phone= #{phone}, company_name=#{companyName},
+                         company_address = #{companyAddress}, email_authentication = #{emailAuthentication}, image = #{image}, updated_at = now()
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="deleteUserSpecialities">
+        DELETE FROM speciality_mappings
+        WHERE user_id = #{userId}
+    </delete>
+
+    <insert id="insertUserSpecialities">
+        INSERT INTO speciality_mappings (user_id, speciality_id)
+        VALUES
+        <foreach collection="specialityIds" item="spId" separator=",">
+            (#{userId}, #{spId})
+        </foreach>
+    </insert>
+
+    <select id="getPromotionEmails" parameterType="long" resultType="string" statementType="CALLABLE">
+        { call getRestaurantIdFromOwnerID(
+                #{ownerId, mode=IN, jdbcType=BIGINT}
+        )}
+    </select>
+
+</mapper>
