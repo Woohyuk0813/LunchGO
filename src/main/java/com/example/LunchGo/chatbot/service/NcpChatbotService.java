@@ -127,5 +127,4 @@ public class NcpChatbotService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Chatbot signature build failed", ex);
         }
     }
-
 }
