@@ -113,6 +113,7 @@ public class NcpChatbotService {
         }
     }
 
+
     private String makeSignature(String message, String secretKey) {
         try {
             SecretKeySpec signingKey = new SecretKeySpec(
